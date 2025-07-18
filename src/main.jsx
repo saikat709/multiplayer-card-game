@@ -16,8 +16,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   
   <React.StrictMode>
     <GameEngineProvider>
-        {/* <App /> */}
-        <LoadingR3F />
+        <App />
+        {/* <LoadingR3F /> */}
     </GameEngineProvider>
   </React.StrictMode>,
 

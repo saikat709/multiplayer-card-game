@@ -1,5 +1,8 @@
-# r3f-vite-starter
-A boilerplate to build R3F projects
+# 3D MultiPlayer Game
+
+### A 3d Card Game.
+
+# 1. Run the project:
 
 ```
 yarn
