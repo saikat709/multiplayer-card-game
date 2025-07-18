@@ -97,18 +97,161 @@ export const GameEngineProvider = ({ children }) => {
     }
 
 
-    const phaseEnd = () => {
+    const getCard = () => {
+        const player = players[getState("playerTurn")];
+        
+        if ( !player ) return "";
+        const cards = player.getState("cards") || [];
+        if ( !cards || cards.length === 0 ) return "";
 
+        const selectedCard = player.getState("selectedCard") || 0;
+
+        return cards[selectedCard] || "";
+    }
+
+    const removePlayerCard = () => {
+        const player = players[getState("playerTurn")];
+        const cards = player.getState("cards") || [];
+        const selectedCard = player.getState("selectedCard") || 0;
+        cards.splice(selectedCard, 1);
+        player.setState("cards", cards, true);
+    }
+
+    const performPlayerAction = () => {
+        const player = players[getState("playerTurn")];
+        const selectedCard = player.getState("selectedCard") || 0;
+        const cards = player.getState("cards") || [];
+        const card = cards[selectedCard];
+        
+        let success = true;
+        if ( card !== "shield" ) {
+            player.setState("shield", false, true);
+        }
+
+        switch(card){
+            case "punch":
+                let target = players[getState("playerTarget")];
+                if ( !target ) {
+                    let targetIndex = (getState("playerTurn") + 1) % players.length;
+                    player.setState("playerTarget", targetIndex, true);
+                    target = players[targetIndex];
+                }
+                if ( target.getState("shield") ) {
+                    console.log("Punch blocked by shield.");
+                    success = false;
+                    break;
+                } 
+                if ( target.getState("gems") > 0 ) {
+                    target.setState("gems", target.getState("gems") - 1, true);
+                    setGems(getState("gems") + 1, true);
+                    console.log("Punch successful, gem stolen.");
+                }
+                break;
+            case "grab":
+                if ( getState("gems") > 0 ) {
+                    player.setState("gems", player.getState("gems") + 1, true);
+                    setGems(getState("gems") - 1, true);
+                    console.log("Grab successful, gem taken.");
+                } else {
+                    console.log("Grab failed, no gems available.");
+                    success = false;
+                }
+                break;
+            case "shield":
+                player.setState("shield", true, true);
+                console.log("Shield activated.");
+                break;
+            default:
+                console.log("Unknown card action: ", card);
+                break
+        }
+        setActionSuccess(success, true);
+    }
+
+
+    const phaseEnd = () => {
+        console.log("Phase ended: ", phase);
+
+        let newTime = 0;
+
+        switch( getState("phase") ) {
+            case "cards":
+                if ( getCard() == "punch" ){
+                    setPhase("playerChoice", true);
+                    newTime = TIME_PHASE_PLAYER_CHOICE;
+                } else{
+                    performPlayerAction();
+                    setPhase("playerAction", true);
+                    newTime = TIME_PHASE_PLAYER_ACTION;
+                }
+                break;
+
+            case "playerChoice":
+                performPlayerAction();
+                setPhase("playerAction", true);
+                newTime = TIME_PHASE_PLAYER_ACTION;
+                break;
+
+            case "playerAction":
+                removePlayerCard();
+                const nextPlayerTurn = (getState("playerTurn") + 1) % players.length;
+                if ( nextPlayerTurn === getState("playerStart") ) {
+                    if ( getState("round") == NB_ROUNDS ){
+                        console.log("Game ended.");
+                        let maxGems = 0;
+                        let winner = null;
+                        players.forEach((player) => {
+                            const gems = player.getState("gems") || 0;
+                            if ( gems > maxGems ) {
+                                maxGems = gems;
+                                winner = player;
+                            }
+                        });
+
+                        players.forEach((player) => {
+                            player.setState("winner", player === winner, true);
+                            player.setState("cards", [], true);
+                        });
+                        
+                        setPhase("end", true);
+
+                    } else {
+                        const newPlayerStart = (getState("playerStart") + 1) % players.length;
+                        setPlayerStart(newPlayerStart, true);
+                        setRound(getState("round") + 1, true);
+                        distributeCards(1);
+                        setPhase("cards", true);
+                        newTime = TIME_PHASE_CARDS;
+                    }
+
+                } else {
+                    setPlayerTurn(nextPlayerTurn, true);
+                    if ( getCard() == "punch" ){
+                        setPhase("playerChoice", true);
+                        newTime = TIME_PHASE_PLAYER_CHOICE;
+                    }
+                    else {
+                        performPlayerAction();
+                        setPhase("playerAction", true);
+                        newTime = TIME_PHASE_PLAYER_ACTION;
+                    }
+                }
+                break;
+            
+            default:
+                break
+        }
     };
 
 
     useEffect(() => {
-       startGame();
-       onPlayerJoin(startGame);
-    });
+        console.log("Game engine useEffect.");
+        startGame();
+        onPlayerJoin(startGame);
+    }, []);
 
     const { paused } = useControls({
-        paused: false
+        "Paused": false
     });
 
     const timeInterval = useRef();
