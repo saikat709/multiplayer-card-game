@@ -6,7 +6,7 @@ export const Experience = () => {
     <>
       <OrbitControls
         minDistance={2} 
-        maxDistance={9} 
+        maxDistance={5} 
 
         minPolarAngle={Math.PI / 4} // Limit vertical rotation upwards
         maxPolarAngle={Math.PI / 2} // Limit vertical rotation downwards (e.g., to prevent going below ground)
@@ -24,3 +24,4 @@ export const Experience = () => {
   );
 
 };
+

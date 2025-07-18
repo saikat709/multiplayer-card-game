@@ -22,14 +22,22 @@
     "three": "^0.170.0"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.11",
     "@types/react": "^18.2.79",
     "@types/react-dom": "^18.2.25",
     "@types/three": "^0.134.0",
     "@vitejs/plugin-react": "^4.7.0",
+    "autoprefixer": "^10.4.21",
     "globals": "^16.3.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "3",
     "vite": "^7.0.5"
   },
   "resolutions": {
     "three-mesh-bvh": "^0.8.0"
-  }
+  },
+  "main": "index.js",
+  "repository": "git@github.com:saikat709/multiplayer-card-game.git",
+  "author": "Mohammad Saikat Islam <saikatislam709@gmail.com>",
+  "license": "MIT"
 }

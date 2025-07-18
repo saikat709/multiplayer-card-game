@@ -250,7 +250,7 @@ export const GameEngineProvider = ({ children }) => {
         onPlayerJoin(startGame);
     }, []);
 
-    const { paused } = useControls({
+    const { Paused } = useControls({
         "Paused": false
     });
 
@@ -258,8 +258,9 @@ export const GameEngineProvider = ({ children }) => {
 
     const runTimer = () => {
         timeInterval.current = setInterval(() => {
+            console.log("Puased: ", Paused);
             if ( !isHost() ) return;
-            if ( paused ) return;
+            if ( Paused ) return;
             let newTime = getState("timer") - 1;
 
             console.log("Timer: ", newTime);
@@ -282,11 +283,13 @@ export const GameEngineProvider = ({ children }) => {
     useEffect(() => {
         runTimer();
         return clearTimer
-    }, [phase, paused]);
+    }, [phase, Paused]);
 
     return (
         <GameEngineContext.Provider value={{
-            ...gameState
+            ...gameState,
+            getCard,
+            startGame
         }}>
             {children}
         </GameEngineContext.Provider>

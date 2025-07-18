@@ -15,6 +15,7 @@ await insertCoin({
 ReactDOM.createRoot(document.getElementById('root')).render(
   
   <React.StrictMode>
+    
     <GameEngineProvider>
         <App />
         {/* <LoadingR3F /> */}
