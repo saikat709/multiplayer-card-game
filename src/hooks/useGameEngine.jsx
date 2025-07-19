@@ -11,9 +11,9 @@ import { randInt } from "three/src/math/MathUtils";
 const GameEngineContext = React.createContext();
 
 
-const TIME_PHASE_CARDS = 10;
-const TIME_PHASE_PLAYER_CHOICE = 10;
-const TIME_PHASE_PLAYER_ACTION = 10;
+const TIME_PHASE_CARDS = 15;
+const TIME_PHASE_PLAYER_CHOICE = 15;
+const TIME_PHASE_PLAYER_ACTION = 15;
 
 export const NB_ROUNDS = 3;
 
@@ -23,13 +23,13 @@ const CARDS_PER_PLAYER = 4;
 
 export const GameEngineProvider = ({ children }) => {
 
-    const [timer, setTimer ] = useMultiplayerState("timer", 0);
-    const [phase, setPhase] = useMultiplayerState("phase", "lobby");
-    const [round, setRound] = useMultiplayerState("round", 1);
-    const [gems, setGems] = useMultiplayerState("gems", NB_GEMS);
-    const [playerTurn, setPlayerTurn] = useMultiplayerState("playerTurn", 0);
-    const [playerStart, setPlayerStart] = useMultiplayerState("playerStart", 0)
-    const [deck, setDeck] = useMultiplayerState("deck", []);
+    const [timer, setTimer ]                = useMultiplayerState("timer", 0);
+    const [phase, setPhase]                 = useMultiplayerState("phase", "lobby");
+    const [round, setRound]                 = useMultiplayerState("round", 1);
+    const [gems, setGems]                   = useMultiplayerState("gems", NB_GEMS);
+    const [playerTurn, setPlayerTurn]       = useMultiplayerState("playerTurn", 0);
+    const [playerStart, setPlayerStart]     = useMultiplayerState("playerStart", 0)
+    const [deck, setDeck]                   = useMultiplayerState("deck", []);
     const [actionSuccess, setActionSuccess] = useMultiplayerState("actionSuccess", true);
 
 
@@ -241,6 +241,7 @@ export const GameEngineProvider = ({ children }) => {
             default:
                 break
         }
+        setTimer(newTime, true);
     };
 
 
@@ -300,7 +301,7 @@ export const GameEngineProvider = ({ children }) => {
 export const useGameEngine = () => {
     const context = React.useContext(GameEngineContext);
 
-    if (!context) {
+    if (context === undefined) {
         throw new Error("useGameEngine must be used within a GameEngineProvider");
     }
 
