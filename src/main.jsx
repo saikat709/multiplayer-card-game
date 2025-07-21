@@ -8,6 +8,7 @@ import { insertCoin } from 'playroomkit'
 
 await insertCoin({
   avatars: [],
+  streamMode: true,
 });
 
 

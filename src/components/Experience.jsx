@@ -5,11 +5,12 @@ import { UI } from "./UI";
 import { useGameEngine } from "../hooks/useGameEngine";
 import { MobileController } from "./MobileController";
 import { degToRad } from "three/src/math/MathUtils";
+import { isStreamScreen } from "playroomkit";
+import { GameBoard } from "./GameBoard";
 
 export const Experience = () => {
 
   const {timer } = useGameEngine();
-
   console.log('Experience timer: ', timer);
 
   return (
@@ -27,7 +28,7 @@ export const Experience = () => {
 
       {/* <Card /> */}
       {/* <Character character={0} aniamtion="Idle" position={[0, -1, 0]} /> */}
-      <MobileController />
+      { isStreamScreen() ? <GameBoard /> : <MobileController /> }
 
       <Environment preset="dawn" background blur={2} />
     </>

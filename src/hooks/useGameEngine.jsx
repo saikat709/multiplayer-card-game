@@ -1,4 +1,3 @@
-// oxlint-disable no-unused-vars
 import { useControls } from "leva";
 import { getState, isHost, 
     onPlayerJoin, 

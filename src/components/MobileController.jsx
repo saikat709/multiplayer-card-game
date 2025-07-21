@@ -18,18 +18,18 @@ export const MobileController = () => {
   const viewport = useThree((state) => state.viewport);
   const scalingRatio = Math.min(1, viewport.width / 3);
   return (
-    <group position-y={-1}>
+    <group position-y={0}>
       <ContactShadows opacity={0.12} />
       <group scale={scalingRatio}>
-        <group position-z={3.5} position-x={-0.6}>
+        <group position-z={3.5} position-x={-0.4}>
           <PlayerName
-            name={me.state.profile.name}
+            name={me.state?.profile.name}
             position-y={0.8}
             fontSize={0.1}
           />
           <Character
             character={myIndex}
-            rotation-y={degToRad(45)}
+            rotation-y={degToRad(40)}
             scale={0.4}
           />
           {[...Array(me.getState("gems") || 0)].map((_, index) => (
@@ -79,7 +79,7 @@ export const MobileController = () => {
                     x: 0,
                     y: 0,
                     z: 2,
-                    rotateX: degToRad(-45),
+                    rotateX: degToRad(-40),
                     rotateY: 0,
                     rotateZ: 0,
                     scale: 1.1,
